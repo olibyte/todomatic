@@ -8,12 +8,14 @@ phases:
       - npm install # Install project dependencies
   pre_build:
     commands:
-      - rm -rf build # Remove the previous build artifacts   
+      - rm -rf build # Remove the previous build artifacts
   build:
     commands:
       - npm run build # Replace with your build script or commands
+  post_build:
+    commands:
+      - aws s3 cp build/index.html s3://todomatic/todomatic/index.html
 
 artifacts:
-  files:
-    - '**/*' # Include all project files in the build artifacts
+  files: '**/*'
   discard-paths: yes
