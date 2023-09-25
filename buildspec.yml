@@ -14,8 +14,7 @@ phases:
       - npm run build # Replace with your build script or commands
   post_build:
     commands:
-      - aws s3 cp build/index.html s3://todomatic/todomatic/index.html
+      - aws s3 cp --recursive --acl public-read ./build s3://todomatic/
 
 artifacts:
   files: '**/*'
-  discard-paths: yes
