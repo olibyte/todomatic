@@ -6,9 +6,9 @@ phases:
       nodejs: 12 # Specify your desired Node.js version
     commands:
       - npm install # Install project dependencies
- pre_build:
-  commands:
-    - rm -rf build # Remove the previous build artifacts   
+  pre_build:
+    commands:
+      - rm -rf build # Remove the previous build artifacts   
   build:
     commands:
       - npm run build # Replace with your build script or commands
