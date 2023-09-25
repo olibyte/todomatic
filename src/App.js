@@ -43,22 +43,32 @@ function App(props) {
   const [filter, setFilter] = useState("All");
 
   function toggleTaskCompleted(id) {
+    const taskToUpdate = tasks.find((task) => task.id === id);
     const updatedTasks = tasks.map((task) => {
-      // if this task has the same ID as the edited task
-      if (id === task.id) {
-        // use object spread to make a new object
-        // whose `completed` prop has been inverted
+      if (task.id === id) {
+        // Toggle the completed status
         return { ...task, completed: !task.completed };
       }
       return task;
     });
-    setTasks(updatedTasks);
-  };
+  
+    // Send a PUT request to update the task's completion status
+    axios
+      .put(`https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks/${id}`, {
+        id: taskToUpdate.id,
+        name: taskToUpdate.name,
+        completed: !taskToUpdate.completed, // Toggle the completion status
+      })
+      .then(() => {
+        // If the PUT request is successful, update the state with the changes
+        setTasks(updatedTasks);
+      })
+      .catch((error) => {
+        console.error('Error updating task:', error);
+      });
+  }
+  
 
-  // function addTask(name) {
-  //   const newTask = { id: `todo-${nanoid()}`, name, completed: false };
-  //   setTasks([...tasks, newTask]);
-  // }
   function addTask(name) {
     const newTask = { id: `todo-${nanoid()}`, name, completed: false };
     
@@ -73,10 +83,6 @@ function App(props) {
       });
   }
   
-  // function deleteTask(id) {
-  //   const remainingTasks = tasks.filter((task) => id !== task.id);
-  //   setTasks(remainingTasks);
-  // }
   function deleteTask(id) {
     // Send a DELETE request to your API Gateway endpoint to delete the task
     axios
@@ -118,15 +124,6 @@ function App(props) {
       });
   }
   
-  // function editTask(id, newName) {
-  //   const editedTaskList = tasks.map((task) => {
-  //     if (id === task.id) {
-  //       return { ...task, name: newName };
-  //     }
-  //     return task;
-  //   });
-  //   setTasks(editedTaskList);
-  // }
   
   const taskList = tasks
   .filter(FILTER_MAP[filter])
