@@ -79,8 +79,11 @@ function App(props) {
         newTask
       )
       .then((response) => {
+        console.log('API response:', response.data);
         // If the POST request is successful, update the state with the new task
-        setTasks([...tasks, response.data]);
+         // If the API does not return the created task, use the newTask object
+      const createdTask = response.data.Item || newTask;
+      setTasks([...tasks, createdTask]);
       })
       .catch((error) => {
         console.error("Error adding task:", error);

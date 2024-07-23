@@ -19,7 +19,6 @@ function Todo(props) {
     function handleSubmit(e) {
         e.preventDefault();
         props.editTask(props.id, newName);
-        setNewName("");
         setEditing(false);
     }
     const editFieldRef = useRef(null);
