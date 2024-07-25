@@ -1,16 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import SignOut from "./components/SignOut";
 import Form from "./components/Form";
 import FilterButton from "./components/FilterButton";
 import Todo from "./components/Todo";
+
+import { signOut } from "./auth";
+import awsConfig from "./aws-config";
+import AWS from "aws-sdk";
+
 import { nanoid } from "nanoid";
 import axios from "axios";
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+
+AWS.config.update(awsConfig);
 
 const FILTER_MAP = {
   All: () => true,
@@ -19,9 +22,12 @@ const FILTER_MAP = {
 };
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-function App(props) {
-  // const [tasks, setTasks] = useState(props.tasks);
+function App() {
   const [tasks, setTasks] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [filter, setFilter] = useState("All");
+
+  /*
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -37,8 +43,33 @@ function App(props) {
   useEffect(() => {
     fetchData();
   }, []);
+*/
 
-  const [filter, setFilter] = useState("All");
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isAuthenticated) {
+        try {
+          const session = AWS.config.credentials;
+
+          const token = session.getIdToken().getJwtToken();
+
+          const response = await axios.get(
+            "https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks",
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          setTasks(response.data.Items);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [isAuthenticated]);
 
   function toggleTaskCompleted(id) {
     const taskToUpdate = tasks.find((task) => task.id === id);
@@ -79,11 +110,11 @@ function App(props) {
         newTask
       )
       .then((response) => {
-        console.log('API response:', response.data);
+        console.log("API response:", response.data);
         // If the POST request is successful, update the state with the new task
-         // If the API does not return the created task, use the newTask object
-      const createdTask = response.data.Item || newTask;
-      setTasks([...tasks, createdTask]);
+        // If the API does not return the created task, use the newTask object
+        const createdTask = response.data.Item || newTask;
+        setTasks([...tasks, createdTask]);
       })
       .catch((error) => {
         console.error("Error adding task:", error);
@@ -135,7 +166,7 @@ function App(props) {
         console.error("Error updating task:", error);
       });
   }
-
+  /*
   const taskList = tasks
     .filter(FILTER_MAP[filter])
     .map((task) => (
@@ -184,6 +215,63 @@ function App(props) {
       >
         {taskList}
       </ul>
+    </div>
+  );
+}
+  */
+  return (
+    <div className="todoapp stack-large">
+      {!isAuthenticated ? (
+        <div>
+          <SignUp />
+
+          <SignIn setIsAuthenticated={setIsAuthenticated} />
+        </div>
+      ) : (
+        <div>
+          <h1>TodoMatic</h1>
+          <SignOut setIsAuthenticated={setIsAuthenticated} />
+
+          <Form addTask={addTask} />
+
+          <div className="filters btn-group stack-exception">
+            {FILTER_NAMES.map((name) => (
+              <FilterButton
+                key={name}
+                name={name}
+                isPressed={name === filter}
+                setFilter={setFilter}
+              />
+            ))}
+          </div>
+
+          <h2 id="list-heading" tabIndex="-1">
+            {tasks.length} tasks remaining
+          </h2>
+
+          <ul
+            role="list"
+            className="todo-list stack-large stack-exception"
+            aria-labelledby="list-heading"
+          >
+            {tasks
+
+              .filter(FILTER_MAP[filter])
+
+              .map((task) => (
+                <Todo
+                  id={task.id}
+                  name={task.name}
+                  completed={task.completed}
+                  key={task.id}
+                  toggleTaskCompleted={toggleTaskCompleted}
+                  deleteTask={deleteTask}
+                  editTask={editTask}
+                />
+              ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
