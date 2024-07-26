@@ -21,11 +21,27 @@ function SignIn({ setIsAuthenticated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="auth-form">
       <h2>Sign In</h2>
       {error && <p>{error}</p>}
-      <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <label htmlFor="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
+      <label htmlFor="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
       <button type="submit">Sign In</button>
     </form>
   );
