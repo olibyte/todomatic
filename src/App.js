@@ -100,6 +100,10 @@ function App() {
     }
   }, [isAuthenticated]);
 
+  function clearTasks() {
+    setTasks([]);
+  }
+
   function addTask(name) {
     const userPool = new CognitoUserPool({
       UserPoolId: awsConfig.UserPoolId,
@@ -266,7 +270,7 @@ function App() {
       ) : (
         <div>
           <h1>TodoMatic</h1>
-          <SignOut setIsAuthenticated={setIsAuthenticated} />
+          <SignOut setIsAuthenticated={setIsAuthenticated} clearTasks={clearTasks} />
           <Form addTask={addTask} />
           <div className="filters btn-group stack-exception">
             {FILTER_NAMES.map((name) => (
