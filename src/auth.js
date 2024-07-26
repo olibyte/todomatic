@@ -1,4 +1,3 @@
-// src/auth.js
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
 import awsConfig from './aws-config';
@@ -35,14 +34,16 @@ export function signIn(username, password, callback) {
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (result) => {
-      console.log('Authentication successful:', result);
-      const logins = {
-        [`cognito-idp.${awsConfig.region}.amazonaws.com/${awsConfig.UserPoolId}`]: result.getIdToken().getJwtToken(),
-      };
+      console.log('Authentication successful');
+      console.log('ID Token:', result.getIdToken().getJwtToken());
+      console.log('Access Token:', result.getAccessToken().getJwtToken());
+      console.log('Refresh Token:', result.getRefreshToken().getToken());
 
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: awsConfig.IdentityPoolId,
-        Logins: logins,
+        Logins: {
+          [`cognito-idp.${awsConfig.Region}.amazonaws.com/${awsConfig.UserPoolId}`]: result.getIdToken().getJwtToken(),
+        },
       });
 
       AWS.config.credentials.refresh((error) => {
@@ -50,13 +51,13 @@ export function signIn(username, password, callback) {
           console.error('Error refreshing credentials:', error);
           callback(error);
         } else {
-          console.log('AWS Credentials:', AWS.config.credentials);
+          console.log('AWS credentials refreshed successfully');
           callback(null, result);
         }
       });
     },
     onFailure: (err) => {
-      console.error('Authentication failed:', err);
+      console.error('Sign in error:', err);
       callback(err);
     },
   });

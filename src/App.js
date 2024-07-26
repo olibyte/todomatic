@@ -12,7 +12,7 @@ import { nanoid } from 'nanoid';
 import AWS from 'aws-sdk';
 import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 
-AWS.config.update(awsConfig);
+AWS.config.update({ region: awsConfig.Region });
 
 const FILTER_MAP = {
   All: () => true,
@@ -27,6 +27,25 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
 
+  async function getAWSCredentials(idToken) {
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: awsConfig.IdentityPoolId,
+      Logins: {
+        [`cognito-idp.${awsConfig.Region}.amazonaws.com/${awsConfig.UserPoolId}`]: idToken
+      }
+    });
+
+    return new Promise((resolve, reject) => {
+      AWS.config.credentials.get((err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(AWS.config.credentials);
+        }
+      });
+    });
+  }
+
   const fetchData = async () => {
     try {
       const userPool = new CognitoUserPool({
@@ -37,7 +56,7 @@ function App() {
       const cognitoUser = userPool.getCurrentUser();
 
       if (cognitoUser) {
-        cognitoUser.getSession((err, session) => {
+        cognitoUser.getSession(async (err, session) => {
           if (err) {
             console.error('Error getting session:', err);
             return;
@@ -45,19 +64,25 @@ function App() {
 
           const token = session.getIdToken().getJwtToken();
 
-          axios.get('https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks', {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then(response => {
-            console.log('Fetched tasks:', response.data);
-            setTasks(response.data || []);
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
+          try {
+            await getAWSCredentials(token);
+
+            axios.get('https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks', {
+              headers: {
+                Authorization: token,
+              },
+            })
+            .then(response => {
+              setTasks(response.data || []);
+            })
+            .catch(error => {
+              console.error('Error fetching data:', error);
+              setTasks([]); // Set to empty array in case of error
+            });
+          } catch (error) {
+            console.error('Error refreshing credentials:', error);
             setTasks([]); // Set to empty array in case of error
-          });
+          }
         });
       } else {
         console.error('No current user found.');
@@ -253,27 +278,23 @@ function App() {
               />
             ))}
           </div>
-          <h2 id="list-heading" tabIndex="-1">
-            {tasks.length} tasks remaining
-          </h2>
+          <h2 id="list-heading">{tasks.length} tasks remaining</h2>
           <ul
             role="list"
             className="todo-list stack-large stack-exception"
             aria-labelledby="list-heading"
           >
-            {Array.isArray(tasks) && tasks
-              .filter(FILTER_MAP[filter])
-              .map((task) => (
-                <Todo
-                  id={task.id}
-                  name={task.name}
-                  completed={task.completed}
-                  key={task.id}
-                  toggleTaskCompleted={toggleTaskCompleted}
-                  deleteTask={deleteTask}
-                  editTask={editTask}
-                />
-              ))}
+            {tasks.filter(FILTER_MAP[filter]).map((task) => (
+              <Todo
+                id={task.id}
+                name={task.name}
+                completed={task.completed}
+                key={task.id}
+                toggleTaskCompleted={toggleTaskCompleted}
+                deleteTask={deleteTask}
+                editTask={editTask}
+              />
+            ))}
           </ul>
         </div>
       )}
