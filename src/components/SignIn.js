@@ -11,6 +11,7 @@ function SignIn({ setIsAuthenticated }) {
     e.preventDefault();
     signIn(username, password, (err, result) => {
       if (err) {
+        console.error('Sign in error:', err);
         setError(err.message);
       } else {
         console.log('Sign in success:', result);

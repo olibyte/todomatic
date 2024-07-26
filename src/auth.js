@@ -35,22 +35,28 @@ export function signIn(username, password, callback) {
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: (result) => {
+      console.log('Authentication successful:', result);
+      const logins = {
+        [`cognito-idp.${awsConfig.region}.amazonaws.com/${awsConfig.UserPoolId}`]: result.getIdToken().getJwtToken(),
+      };
+
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: awsConfig.IdentityPoolId,
-        Logins: {
-          [`cognito-idp.${awsConfig.region}.amazonaws.com/${awsConfig.UserPoolId}`]: result.getIdToken().getJwtToken(),
-        },
+        Logins: logins,
       });
 
       AWS.config.credentials.refresh((error) => {
         if (error) {
-          console.error(error);
+          console.error('Error refreshing credentials:', error);
+          callback(error);
         } else {
+          console.log('AWS Credentials:', AWS.config.credentials);
           callback(null, result);
         }
       });
     },
     onFailure: (err) => {
+      console.error('Authentication failed:', err);
       callback(err);
     },
   });
