@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import SignOut from './components/SignOut';
+import RequestPasswordReset from './components/RequestPasswordReset';
+import ConfirmPasswordReset from './components/ConfirmPasswordReset';
 import Form from './components/Form';
 import FilterButton from './components/FilterButton';
 import Todo from './components/Todo';
@@ -26,6 +28,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
+  const [showResetForm, setShowResetForm] = useState(false);
 
   async function getAWSCredentials(idToken) {
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -266,6 +269,8 @@ function App() {
         <div>
           <SignUp />
           <SignIn setIsAuthenticated={setIsAuthenticated} />
+          <RequestPasswordReset setShowResetForm={setShowResetForm} />
+          {showResetForm && <ConfirmPasswordReset />}
         </div>
       ) : (
         <div>
