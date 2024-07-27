@@ -29,6 +29,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
   const [showResetForm, setShowResetForm] = useState(false);
+  const [email, setEmail] = useState('');
 
   async function getAWSCredentials(idToken) {
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -269,8 +270,8 @@ function App() {
         <div>
           <SignUp />
           <SignIn setIsAuthenticated={setIsAuthenticated} />
-          <RequestPasswordReset setShowResetForm={setShowResetForm} />
-          {showResetForm && <ConfirmPasswordReset />}
+          <RequestPasswordReset setShowResetForm={setShowResetForm} setEmail={setEmail} />
+          {showResetForm && <ConfirmPasswordReset email={email} />}
         </div>
       ) : (
         <div>

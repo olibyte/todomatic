@@ -1,4 +1,3 @@
-// src/auth.js
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
 import awsConfig from './aws-config';
@@ -71,34 +70,34 @@ export function signOut() {
   }
 }
 
-export function requestPasswordReset(username, callback) {
+export function requestPasswordReset(email, callback) {
   const cognitoUser = new CognitoUser({
-    Username: username,
+    Username: email,
     Pool: userPool,
   });
 
   cognitoUser.forgotPassword({
     onSuccess: (result) => {
-      console.log('Password reset request successful:', result);
+      console.log('Code sent successfully:', result);
       callback(null, result);
     },
     onFailure: (err) => {
-      console.error('Password reset request error:', err);
+      console.error('Error sending code:', err);
       callback(err);
     },
   });
 }
 
-export function resetPassword(username, verificationCode, newPassword, callback) {
+export function resetPassword(email, verificationCode, newPassword, callback) {
   const cognitoUser = new CognitoUser({
-    Username: username,
+    Username: email,
     Pool: userPool,
   });
 
   cognitoUser.confirmPassword(verificationCode, newPassword, {
-    onSuccess: (result) => {
-      console.log('Password reset successful:', result);
-      callback(null, result);
+    onSuccess: () => {
+      console.log('Password reset successfully');
+      callback(null);
     },
     onFailure: (err) => {
       console.error('Password reset error:', err);

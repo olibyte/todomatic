@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { resetPassword } from '../auth';
 
-const ConfirmPasswordReset = () => {
-  const [username, setUsername] = useState('');
+const ConfirmPasswordReset = ({ email }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState(null);
@@ -11,7 +10,7 @@ const ConfirmPasswordReset = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    resetPassword(username, verificationCode, newPassword, (err, result) => {
+    resetPassword(email, verificationCode, newPassword, (err, result) => {
       if (err) {
         console.error('Password reset error:', err);
         setError(err.message);
@@ -27,15 +26,6 @@ const ConfirmPasswordReset = () => {
       <h2>Reset Password</h2>
       {error && <p>{error}</p>}
       {message && <p>{message}</p>}
-      <label htmlFor="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
       <label htmlFor="verificationCode">Verification Code</label>
       <input
         type="text"
