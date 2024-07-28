@@ -73,6 +73,12 @@ function TodoList() {
     }
   }
 
+  const taskCounts = {
+    All: tasks.length,
+    Active: tasks.filter(FILTER_MAP.Active).length,
+    Completed: tasks.filter(FILTER_MAP.Completed).length,
+  };
+
   return (
     <div>
       <Form addTask={handleAddTask} />
@@ -81,12 +87,12 @@ function TodoList() {
           <FilterButton
             key={name}
             name={name}
+            count={taskCounts[name]}
             isPressed={name === filter}
             setFilter={setFilter}
           />
         ))}
       </div>
-      <h2 id="list-heading">{tasks.length} tasks remaining</h2>
       <ul
         role="list"
         className="todo-list stack-large stack-exception"

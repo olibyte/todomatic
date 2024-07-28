@@ -9,7 +9,7 @@ import Header from './Header';
 import TodoList from '../Todo/TodoList';
 import awsConfig from '../../aws-config';
 import AWS from 'aws-sdk';
-import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import '../../App.css';
 
 AWS.config.update({ region: awsConfig.Region });
