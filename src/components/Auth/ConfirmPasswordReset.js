@@ -1,6 +1,6 @@
 // src/components/ConfirmPasswordReset.js
 import React, { useState } from 'react';
-import { resetPassword } from '../auth';
+import { resetPassword } from '../../auth';
 
 const ConfirmPasswordReset = ({ email }) => {
   const [verificationCode, setVerificationCode] = useState('');

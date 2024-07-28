@@ -1,7 +1,7 @@
 import React from 'react';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
-import awsConfig from '../aws-config';
+import awsConfig from '../../aws-config';
 
 const SignOut = ({ setIsAuthenticated, clearTasks }) => {
   const handleSignOut = () => {

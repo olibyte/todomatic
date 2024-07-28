@@ -8,7 +8,7 @@ const awsConfig = {
 };
 
 AWS.config.update({
-  region: awsConfig.region,
+  region: awsConfig.Region,
 });
 
 export default awsConfig;

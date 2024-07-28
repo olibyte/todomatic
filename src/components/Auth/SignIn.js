@@ -1,6 +1,6 @@
 // src/components/SignIn.js
 import React, { useState } from 'react';
-import { signIn } from '../auth';
+import { signIn } from '../../auth';
 
 function SignIn({ setIsAuthenticated }) {
   const [username, setUsername] = useState('');

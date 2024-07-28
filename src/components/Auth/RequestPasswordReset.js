@@ -1,6 +1,6 @@
 // src/components/RequestPasswordReset.js
 import React, { useState } from 'react';
-import { requestPasswordReset } from '../auth';
+import { requestPasswordReset } from '../../auth';
 
 const RequestPasswordReset = ({ setShowResetForm, setEmail }) => {
   const [email, setEmailLocal] = useState('');

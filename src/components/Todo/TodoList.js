@@ -1,18 +1,13 @@
+// src/components/Todo/TodoList.js
 import React, { useState, useEffect } from 'react';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import SignOut from './components/SignOut';
-import RequestPasswordReset from './components/RequestPasswordReset';
-import ConfirmPasswordReset from './components/ConfirmPasswordReset';
-import Form from './components/Form';
-import FilterButton from './components/FilterButton';
-import Todo from './components/Todo';
-
+import Form from './Form';
+import FilterButton from './FilterButton';
+import Todo from './Todo';
 import axios from 'axios';
-import awsConfig from './aws-config';
-import { nanoid } from 'nanoid';
+import awsConfig from '../../aws-config';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import AWS from 'aws-sdk';
-import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
+import { nanoid } from 'nanoid';
 
 AWS.config.update({ region: awsConfig.Region });
 
@@ -24,12 +19,9 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
-  const [showResetForm, setShowResetForm] = useState(false);
-  const [email, setEmail] = useState('');
 
   async function getAWSCredentials(idToken) {
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -85,28 +77,22 @@ function App() {
             });
           } catch (error) {
             console.error('Error refreshing credentials:', error);
-            setTasks([]); // Set to empty array in case of error
+            setTasks([]);
           }
         });
       } else {
         console.error('No current user found.');
-        setTasks([]); // Set to empty array in case of error
+        setTasks([]);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      setTasks([]); // Set to empty array in case of error
+      setTasks([]);
     }
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchData();
-    }
-  }, [isAuthenticated]);
-
-  function clearTasks() {
-    setTasks([]);
-  }
+    fetchData();
+  }, []);
 
   function addTask(name) {
     const userPool = new CognitoUserPool({
@@ -265,51 +251,38 @@ function App() {
   }
 
   return (
-    <div className="todoapp stack-large">
-      {!isAuthenticated ? (
-        <div>
-          <SignUp />
-          <SignIn setIsAuthenticated={setIsAuthenticated} />
-          <RequestPasswordReset setShowResetForm={setShowResetForm} setEmail={setEmail} />
-          {showResetForm && <ConfirmPasswordReset email={email} />}
-        </div>
-      ) : (
-        <div>
-          <h1>TodoMatic</h1>
-          <SignOut setIsAuthenticated={setIsAuthenticated} clearTasks={clearTasks} />
-          <Form addTask={addTask} />
-          <div className="filters btn-group stack-exception">
-            {FILTER_NAMES.map((name) => (
-              <FilterButton
-                key={name}
-                name={name}
-                isPressed={name === filter}
-                setFilter={setFilter}
-              />
-            ))}
-          </div>
-          <h2 id="list-heading">{tasks.length} tasks remaining</h2>
-          <ul
-            role="list"
-            className="todo-list stack-large stack-exception"
-            aria-labelledby="list-heading"
-          >
-            {tasks.filter(FILTER_MAP[filter]).map((task) => (
-              <Todo
-                id={task.id}
-                name={task.name}
-                completed={task.completed}
-                key={task.id}
-                toggleTaskCompleted={toggleTaskCompleted}
-                deleteTask={deleteTask}
-                editTask={editTask}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
+    <div>
+      <Form addTask={addTask} />
+      <div className="filters btn-group stack-exception">
+        {FILTER_NAMES.map((name) => (
+          <FilterButton
+            key={name}
+            name={name}
+            isPressed={name === filter}
+            setFilter={setFilter}
+          />
+        ))}
+      </div>
+      <h2 id="list-heading">{tasks.length} tasks remaining</h2>
+      <ul
+        role="list"
+        className="todo-list stack-large stack-exception"
+        aria-labelledby="list-heading"
+      >
+        {tasks.filter(FILTER_MAP[filter]).map((task) => (
+          <Todo
+            id={task.id}
+            name={task.name}
+            completed={task.completed}
+            key={task.id}
+            toggleTaskCompleted={toggleTaskCompleted}
+            deleteTask={deleteTask}
+            editTask={editTask}
+          />
+        ))}
+      </ul>
     </div>
   );
 }
 
-export default App;
+export default TodoList;

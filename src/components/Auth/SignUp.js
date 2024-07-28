@@ -1,6 +1,6 @@
 // src/components/SignUp.js
 import React, { useState } from 'react';
-import { signUp } from '../auth';
+import { signUp } from '../../auth';
 
 function SignUp() {
   const [username, setUsername] = useState('');
