@@ -1,4 +1,3 @@
-// src/components/Todo/TodoList.js
 import React, { useState, useEffect } from 'react';
 import Form from './Form';
 import FilterButton from './FilterButton';
@@ -13,26 +12,28 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-function TodoList() {
+function TodoList(listId) {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
     async function loadTasks() {
       try {
-        const tasks = await fetchTasks();
+        const tasks = await fetchTasks(listId);
         setTasks(tasks);
       } catch (error) {
         console.error('Error loading tasks:', error);
       }
     }
 
-    loadTasks();
-  }, []);
+    if (listId) {
+      loadTasks();
+    }
+  }, [listId]);
 
   async function handleAddTask(name) {
     try {
-      const newTask = await addTask(name);
+      const newTask = await addTask(name, listId);
       setTasks([...tasks, newTask]);
     } catch (error) {
       console.error('Error adding task:', error);

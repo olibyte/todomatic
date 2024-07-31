@@ -462,3 +462,52 @@ input[type="date"]:focus {
   background-color: #B9D1EA; /* C30M10 */
   color: #333;
 }
+/* src/App.css */
+.auth-container, .todoapp, .list-manager {
+  background-color: #FFF6C7; /* Y30 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.list-manager h2 {
+  color: #4D4D4D;
+}
+
+.list-manager input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.list-manager button {
+  width: 100%;
+  padding: 10px;
+  background-color: #F4AA29; /* M40Y90 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.list-manager ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.list-manager li {
+  margin: 5px 0;
+}
+
+.list-manager li button {
+  width: 100%;
+  padding: 10px;
+  background-color: #B9D1EA; /* C30M10 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

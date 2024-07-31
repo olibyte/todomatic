@@ -7,6 +7,9 @@ import RequestPasswordReset from '../Auth/RequestPasswordReset';
 import ConfirmPasswordReset from '../Auth/ConfirmPasswordReset';
 import Header from './Header';
 import TodoList from '../Todo/TodoList';
+import ListManager from '../Lists/ListManager';
+
+
 import awsConfig from '../../aws-config';
 import AWS from 'aws-sdk';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
@@ -19,7 +22,8 @@ function App() {
   const [formType, setFormType] = useState('signIn');
   const [email, setEmail] = useState('');
   const [tasks, setTasks] = useState([]);
-
+  const [lists, setLists] = useState([]);
+  const [selectedListId, setSelectedListId] = useState(null);
   useEffect(() => {
     const userPool = new CognitoUserPool({
       UserPoolId: awsConfig.UserPoolId,
@@ -60,6 +64,9 @@ function App() {
       ) : (
         <div>
           <SignOut setIsAuthenticated={setIsAuthenticated} clearTasks={clearTasks} />
+          <ListManager lists={lists} setLists={setLists} setSelectedListId={setSelectedListId} />
+
+{selectedListId && <TodoList listId={selectedListId} />}
           <TodoList tasks={tasks} setTasks={setTasks} />
         </div>
       )}
