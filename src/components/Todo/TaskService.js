@@ -1,4 +1,3 @@
-// src/components/Todo/TaskService.js
 import AWS from 'aws-sdk';
 import axios from 'axios';
 import awsConfig from '../../aws-config';
@@ -26,7 +25,7 @@ export async function getAWSCredentials(idToken) {
   });
 }
 
-export async function fetchTasks() {
+export async function fetchTasks(listId) {
   const userPool = new CognitoUserPool({
     UserPoolId: awsConfig.UserPoolId,
     ClientId: awsConfig.ClientId,
@@ -47,18 +46,19 @@ export async function fetchTasks() {
     const token = session.getIdToken().getJwtToken();
     await getAWSCredentials(token);
 
-    const response = await axios.get('https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks', {
+    const response = await axios.get(`https://3wretk2l40.execute-api.us-east-1.amazonaws.com/dev/tasks`, {
       headers: {
         Authorization: token,
+        'Content-Type': 'application/json',
       },
+      params: { ListId: listId }  // Ensure this matches the query parameter name expected by your API
     });
     return response.data || [];
   } else {
     throw new Error('No current user found.');
   }
 }
-
-export async function addTask(name) {
+export async function addTask(name, listId) {
   const userPool = new CognitoUserPool({
     UserPoolId: awsConfig.UserPoolId,
     ClientId: awsConfig.ClientId,
@@ -77,15 +77,18 @@ export async function addTask(name) {
     });
 
     const token = session.getIdToken().getJwtToken();
-    const newTask = { id: `todo-${nanoid()}`, name, completed: false };
+    const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the JWT token to get the userId
+    const userId = decodedToken.sub;
 
-    const response = await axios.post('https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks', newTask, {
+    const newTask = { TaskId: nanoid(), listId, taskName: name, completed: false, userId };
+
+    const response = await axios.post('https://3wretk2l40.execute-api.us-east-1.amazonaws.com/dev/tasks', newTask, {
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
       },
     });
-    return response.data.Item || newTask;
+    return response.data || newTask;
   } else {
     throw new Error('No current user found.');
   }
@@ -110,10 +113,10 @@ export async function toggleTaskCompleted(id, tasks) {
     });
 
     const token = session.getIdToken().getJwtToken();
-    const taskToUpdate = tasks.find((task) => task.id === id);
+    const taskToUpdate = tasks.find((task) => task.TaskId === id);
     const updatedTask = { ...taskToUpdate, completed: !taskToUpdate.completed };
 
-    await axios.put(`https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks/${id}`, updatedTask, {
+    await axios.put('https://3wretk2l40.execute-api.us-east-1.amazonaws.com/dev/tasks', updatedTask, {
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -124,8 +127,7 @@ export async function toggleTaskCompleted(id, tasks) {
     throw new Error('No current user found.');
   }
 }
-
-export async function deleteTask(id) {
+export async function deleteTask(taskId) {
   const userPool = new CognitoUserPool({
     UserPoolId: awsConfig.UserPoolId,
     ClientId: awsConfig.ClientId,
@@ -145,17 +147,26 @@ export async function deleteTask(id) {
 
     const token = session.getIdToken().getJwtToken();
 
-    await axios.delete(`https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks/${id}`, {
-      headers: {
-        Authorization: token,
-      },
-    });
+    try {
+      await axios.delete('https://3wretk2l40.execute-api.us-east-1.amazonaws.com/dev/tasks', {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          TaskId: taskId
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      throw error;
+    }
   } else {
     throw new Error('No current user found.');
   }
 }
 
-export async function editTask(id, newName, tasks) {
+export async function editTask(TaskId, taskName) {
   const userPool = new CognitoUserPool({
     UserPoolId: awsConfig.UserPoolId,
     ClientId: awsConfig.ClientId,
@@ -174,16 +185,22 @@ export async function editTask(id, newName, tasks) {
     });
 
     const token = session.getIdToken().getJwtToken();
-    const taskToUpdate = tasks.find((task) => task.id === id);
-    const updatedTask = { ...taskToUpdate, name: newName };
 
-    await axios.put(`https://gh8polh35e.execute-api.us-east-1.amazonaws.com/default/tasks/${id}`, updatedTask, {
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
-    return updatedTask;
+    try {
+      const response = await axios.put(`https://3wretk2l40.execute-api.us-east-1.amazonaws.com/dev/tasks`, {
+        TaskId: TaskId,
+        taskName: taskName
+      }, {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data || { TaskId: TaskId, taskName };
+    } catch (error) {
+      console.error('Error updating list:', error);
+      throw error;
+    }
   } else {
     throw new Error('No current user found.');
   }

@@ -12,7 +12,7 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-function TodoList(listId) {
+function TodoList({ listId }) {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
 
@@ -44,7 +44,7 @@ function TodoList(listId) {
     try {
       const updatedTask = await toggleTaskCompleted(id, tasks);
       const updatedTasks = tasks.map((task) =>
-        task.id === id ? updatedTask : task
+        task.TaskId === id ? updatedTask : task
       );
       setTasks(updatedTasks);
     } catch (error) {
@@ -55,7 +55,7 @@ function TodoList(listId) {
   async function handleDeleteTask(id) {
     try {
       await deleteTask(id);
-      const remainingTasks = tasks.filter((task) => id !== task.id);
+      const remainingTasks = tasks.filter((task) => id !== task.TaskId);
       setTasks(remainingTasks);
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -66,7 +66,7 @@ function TodoList(listId) {
     try {
       const updatedTask = await editTask(id, newName, tasks);
       const updatedTasks = tasks.map((task) =>
-        task.id === id ? updatedTask : task
+        task.TaskId === id ? updatedTask : task
       );
       setTasks(updatedTasks);
     } catch (error) {
@@ -101,10 +101,10 @@ function TodoList(listId) {
       >
         {tasks.filter(FILTER_MAP[filter]).map((task) => (
           <Todo
-            id={task.id}
-            name={task.name}
+            id={task.TaskId}
+            name={task.taskName}
             completed={task.completed}
-            key={task.id}
+            key={task.TaskId}
             toggleTaskCompleted={handleToggleTaskCompleted}
             deleteTask={handleDeleteTask}
             editTask={handleEditTask}

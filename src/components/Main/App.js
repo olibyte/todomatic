@@ -1,4 +1,3 @@
-// src/components/Main/App.js
 import React, { useState, useEffect } from 'react';
 import SignIn from '../Auth/SignIn';
 import SignUp from '../Auth/SignUp';
@@ -8,7 +7,6 @@ import ConfirmPasswordReset from '../Auth/ConfirmPasswordReset';
 import Header from './Header';
 import TodoList from '../Todo/TodoList';
 import ListManager from '../Lists/ListManager';
-
 
 import awsConfig from '../../aws-config';
 import AWS from 'aws-sdk';
@@ -21,9 +19,9 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formType, setFormType] = useState('signIn');
   const [email, setEmail] = useState('');
-  const [tasks, setTasks] = useState([]);
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(null);
+
   useEffect(() => {
     const userPool = new CognitoUserPool({
       UserPoolId: awsConfig.UserPoolId,
@@ -42,10 +40,6 @@ function App() {
     }
   }, []);
 
-  function clearTasks() {
-    setTasks([]);
-  }
-
   return (
     <div className="app-container">
       <Header />
@@ -63,11 +57,9 @@ function App() {
         </div>
       ) : (
         <div>
-          <SignOut setIsAuthenticated={setIsAuthenticated} clearTasks={clearTasks} />
+          <SignOut setIsAuthenticated={setIsAuthenticated} clearTasks={() => setLists([])} />
           <ListManager lists={lists} setLists={setLists} setSelectedListId={setSelectedListId} />
-
-{selectedListId && <TodoList listId={selectedListId} />}
-          <TodoList tasks={tasks} setTasks={setTasks} />
+          {selectedListId && <TodoList listId={selectedListId} />}
         </div>
       )}
     </div>
