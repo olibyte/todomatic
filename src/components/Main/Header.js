@@ -4,7 +4,7 @@ import React from 'react';
 function Header() {
   return (
     <header>
-      <h1>TodoMatic</h1>
+      <h1>goalie</h1>
     </header>
   );
 }
