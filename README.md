@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# Goalie - Agile Life Management
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Goalie is a life management application designed to help you with your tasks and chores. It allows users to manage their tasks, assign points, and track their progress, gamifying life administration. Users can create lists, add tasks, and complete them to earn rewards. You can even share lists with friends to collaborate or compete!
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **User Authentication**: Secure user authentication using AWS Cognito.
+- **Task Management**: Create, read, update, and delete tasks.
+- **List Management**: Organize tasks into lists.
+- **Gamification**: Assign points to tasks and track progress.
+- **Competitions**: Treat each list as a competition (or collab) and reward users for completing tasks.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React
+- **Backend**: AWS Lambda, API Gateway, DynamoDB
+- **Authentication**: AWS Cognito
+- **CI/CD**: AWS CodePipeline & S3
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js
+- AWS Account
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   git clone https://github.com/your-username/goalie.git
+   cd goalie
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install dependencies**
 
-### `npm run eject`
+   ```bash
+   npm install
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. **Set up AWS resources**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - **Cognito User Pool**: Create a Cognito User Pool for authentication.
+   - **DynamoDB Tables**: Create `Lists` and `Tasks` tables with appropriate schema.
+   - **API Gateway**: Set up API Gateway to handle requests.
+   - **Lambda Functions**: Deploy Lambda functions for CRUD operations (I wrote mine in Python).
+   - **Codepipeline**: Set up CI/CD pipeline connected to GitHub and S3 (optional)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Configuration
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **AWS Configuration**
 
-## Learn More
+   Create a file named `aws-config.js` in the `src` directory with the following content:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```javascript
+   const awsConfig = {
+     Region: 'your-region',
+     UserPoolId: 'your-user-pool-id',
+     ClientId: 'your-client-id',
+     IdentityPoolId: 'your-identity-pool-id',
+   };
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   export default awsConfig;
+   ```
 
-### Code Splitting
+2. **Environment Variables**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   Set up your environment variables for AWS credentials and configurations.
 
-### Analyzing the Bundle Size
+### Running the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Start the development server**
 
-### Making a Progressive Web App
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. **Open the application**
 
-### Advanced Configuration
+   Open your browser and navigate to `http://localhost:3000`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Lists
 
-### `npm run build` fails to minify
+- **GET** `/lists?userId={userId}` - Fetch all lists for a user.
+- **POST** `/lists` - Create a new list.
+- **PUT** `/lists` - Update an existing list.
+- **DELETE** `/lists` - Delete a list.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Tasks
+
+- **GET** `/tasks?ListId={ListId}` - Fetch all tasks for a list.
+- **POST** `/tasks` - Create a new task.
+- **PUT** `/tasks` - Update an existing task.
+- **DELETE** `/tasks` - Delete a task.
+
+## Contributing
+
+Wanna contribute? Simply open an issue or submit a pull request if you have any improvements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License.
