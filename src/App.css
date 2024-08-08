@@ -1,295 +1,199 @@
-/* Consolidated and Updated CSS */
 
-/* RESETS */
+:root {
+  --font-primary: 'DIN Round', sans-serif;
+  --font-size-body: 16px;
+  --font-size-h1: 32px;
+  --font-size-h2: 24px;
+  --line-height-body: 1.6;
+  --color-text: #333;
+  --color-background: #B9D1EA; /* Ensure this is correctly set */
+  --color-primary: #F4AA29; /* M40Y90 */
+  --color-secondary: #B9D1EA; /* C30M10 */
+  --color-danger: #ca3c3c;
+  --color-text-light: #fff;
+  --color-text-dark: #333;
+}
+
+/* Font Face Definitions */
+@font-face {
+  font-family: 'DIN Round';
+  src: url('fonts/din-round-bold.eot');
+  src: url('fonts/din-round-bold.eot?#iefix') format('embedded-opentype'),
+       url('fonts/din-round-bold.woff') format('woff'),
+       url('fonts/din-round-bold.ttf') format('truetype'),
+       url('fonts/din-round-bold.svg#DIN-Round-Bold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DIN Round';
+  src: url('fonts/din-round-light.eot');
+  src: url('fonts/din-round-light.eot?#iefix') format('embedded-opentype'),
+       url('fonts/din-round-light.woff') format('woff'),
+       url('fonts/din-round-light.ttf') format('truetype'),
+       url('fonts/din-round-light.svg#DIN-Round-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Global Resets */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
 *:focus {
   outline: 3px dashed #228bec;
-  outline-offset: 0;
 }
-html {
-  font: 62.5% / 1.15 sans-serif;
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
-h1,
-h2 {
+
+h1, h2 {
   margin-bottom: 0;
+  font-family: var(--font-primary);
+  font-weight: bold;
+}
+
+/* Button Styles */
+button {
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+/* Container Styles */
+.auth-container,
+.todoapp,
+.list-manager {
+  background-color: #FFF6C7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+h1 {
+  color: var(--color-primary);
+  text-align: center;
+}
+
+/* List Manager */
+.list-manager h2 {
+  color: var(--color-text-dark);
+}
+
+.list-manager input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.list-manager button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
 }
-button {
+.list-manager ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.list-manager li {
+  margin: 5px 0;
+}
+
+.list-manager li button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
   border: none;
-  margin: 0;
-  padding: 0;
-  width: auto;
-  overflow: visible;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: normal;
-  -webkit-font-smoothing: inherit;
-  -moz-osx-font-smoothing: inherit;
-  appearance: none;
-}
-button::-moz-focus-inner {
-  border: 0;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-}
-button,
-input {
-  overflow: visible;
-}
-input[type="text"] {
-  border-radius: 0;
-}
-body {
-  width: 100%;
-  max-width: 68rem;
-  margin: 0 auto;
-  font: 1.6rem/1.25 Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #4d4d4d;
-}
-@media screen and (min-width: 620px) {
-  body {
-    font-size: 1.9rem;
-    line-height: 1.31579;
-  }
-}
-/*END RESETS*/
-/* GLOBAL STYLES */
-.form-group > input[type="text"] {
-  display: inline-block;
-  margin-top: 0.4rem;
-}
-.btn {
-  padding: 0.8rem 1rem 0.7rem;
-  border: 0.2rem solid #4d4d4d;
+  border-radius: 5px;
   cursor: pointer;
-  text-transform: capitalize;
 }
-.btn.toggle-btn {
-  border-width: 1px;
-  border-color: #d3d3d3;
-}
-.btn.toggle-btn[aria-pressed="true"] {
-  text-decoration: underline;
-  border-color: #4d4d4d;
-}
-.btn__danger {
-  color: #fff;
-  background-color: #ca3c3c;
-  border-color: #bd2130;
-}
-.btn__filter {
-  border-color: lightgrey;
-}
-.btn__primary {
-  color: #fff;
-  background-color: #000;
-}
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-}
-.btn-group > * {
-  flex: 1 1 49%;
-}
-.btn-group > * + * {
-  margin-left: 0.8rem;
-}
-.label-wrapper {
-  margin: 0;
-  flex: 0 0 100%;
-  text-align: center;
-}
-.visually-hidden {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-[class*="stack"] > * {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.stack-small > * + * {
-  margin-top: 1.25rem;
-}
-.stack-large > * + * {
-  margin-top: 2.5rem;
-}
-@media screen and (min-width: 550px) {
-  .stack-small > * + * {
-    margin-top: 1.4rem;
-  }
-  .stack-large > * + * {
-    margin-top: 2.8rem;
-  }
-}
-.stack-exception {
-  margin-top: 1.2rem;
-}
-/* END GLOBAL STYLES */
-.todoapp {
-  background: #fff;
-  margin: 2rem 0 4rem 0;
-  padding: 1rem;
-  position: relative;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2.5rem 5rem 0 rgba(0, 0, 0, 0.1);
-}
-@media screen and (min-width: 550px) {
-  .todoapp {
-    padding: 4rem;
-  }
-}
-.todoapp > * {
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-.todoapp > form {
-  max-width: 100%;
-}
-.todoapp > h1 {
-  display: block;
-  max-width: 100%;
-  text-align: center;
-  margin: 0;
-  margin-bottom: 1rem;
-  color: #000000; /* Adjusted color for better contrast */
-}
-.label__lg {
-  line-height: 1.01567;
-  font-weight: 300;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-.input__lg {
-  padding: 2rem;
-  border: 2px solid #000;
-}
-.input__lg:focus {
-  border-color: #4d4d4d;
-  box-shadow: inset 0 0 0 2px;
-}
-[class*="__lg"] {
-  display: inline-block;
-  width: 100%;
-  font-size: 1.9rem;
-}
-[class*="__lg"]:not(:last-child) {
-  margin-bottom: 1rem;
-}
-@media screen and (min-width: 620px) {
-  [class*="__lg"] {
-    font-size: 2.4rem;
-  }
-}
-/* Todo item styles */
+
+/* Todo Styles */
 .todo {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  background-color: white;
+  border: 1px solid #ddd;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
 }
-.todo > * {
-  flex: 0 0 100%;
+
+.todo.completed {
+  background-color: #dbffc7;
+  text-decoration: line-through !important;
+  color: #aaa;
 }
-.todo-text {
-  width: 100%;
-  min-height: 4.4rem;
-  padding: 0.4rem 0.8rem;
-  border: 2px solid #565656;
+
+.todo .btn-group button {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
 }
-.todo-text:focus {
-  box-shadow: inset 0 0 0 2px;
+
+.todo .btn-group button:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-text-dark);
 }
-/* CHECKBOX STYLES */
-.c-cb {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  font-weight: 400;
-  font-size: 1.6rem;
-  line-height: 1.25;
-  display: block;
-  position: relative;
-  min-height: 44px;
-  padding-left: 40px;
-  clear: left;
+
+/* Filters */
+.filters .btn-group button {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
 }
-.c-cb > label::before,
-.c-cb > input[type="checkbox"] {
-  box-sizing: border-box;
-  top: -2px;
-  left: -2px;
-  width: 44px;
-  height: 44px;
+
+.filters .btn-group button.isPressed {
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
 }
-.c-cb > input[type="checkbox"] {
-  -webkit-font-smoothing: antialiased;
-  cursor: pointer;
-  position: absolute;
-  z-index: 1;
-  margin: 0;
-  opacity: 0;
-}
-.c-cb > label {
-  font-size: inherit;
-  font-family: inherit;
-  line-height: inherit;
-  display: inline-block;
-  margin-bottom: 0;
-  padding: 8px 15px 5px;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.c-cb > label::before {
-  content: "";
-  position: absolute;
-  border: 2px solid currentcolor;
-  background: transparent;
-}
-.c-cb > input[type="checkbox"]:focus + label::before {
-  border-width: 4px;
-  outline: 3px dashed #228bec;
-}
-.c-cb > label::after {
-  box-sizing: content-box;
-  content: "";
-  position: absolute;
-  top: 11px;
-  left: 9px;
-  width: 18px;
-  height: 7px;
-  transform: rotate(-45deg);
-  border: solid;
-  border-width: 0 0 5px 5px;
-  border-top-color: transparent;
-  opacity: 0;
-  background: transparent;
-}
-.c-cb > input[type="checkbox"]:checked + label::after {
-  opacity: 1;
-}
-/* SignIn and SignUp Forms */
+
+/* Auth Forms */
 .auth-form {
   max-width: 40rem;
   margin: 2rem auto;
@@ -309,205 +213,18 @@ body {
   font-weight: bold;
 }
 
-.auth-form input {
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .auth-form button {
   width: 100%;
   padding: 1rem;
-  background-color: #000;
+  background-color: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   text-transform: uppercase;
+  transition: background-color 0.3s ease;
 }
 
 .auth-form button:hover {
   background-color: #333;
-}
-
-/* App styles */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #B9D1EA; /* C30M10 */
-  color: #333;
-}
-
-button {
-  cursor: pointer;
-  font-size: 16px;
-  margin: 5px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-.auth-container,
-.todoapp {
-  background-color: #FFF6C7; /* Y30 */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 20px;
-}
-
-h1 {
-  color: #000000; /* Adjusted color for better contrast */
-  text-align: center;
-}
-
-button {
-  background-color: #F4AA29; /* M40Y90 */
-  color: white;
-}
-
-button.sign-out {
-  background-color: #000000; /* Adjusted color for better contrast */
-}
-
-button.form-switch {
-  background-color: #B9D1EA; /* C30M10 */
-}
-
-.form-switch {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.form-switch button {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background-color: #F4AA29; /* M40Y90 */
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.form-switch button:hover {
-  background-color: #B9D1EA; /* C30M10 */
-  color: #333;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="date"] {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 20px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-input[type="date"]:focus {
-  border-color: #000000; /* Adjusted color for better contrast */
-  outline: none;
-}
-
-.filters .btn-group button {
-  background-color: #000000; /* Adjusted color for better contrast */
-  color: white;
-}
-
-.filters .btn-group button.isPressed {
-  background-color: #F4AA29; /* M40Y90 */
-  color: white;
-}
-
-.todo-list {
-  list-style: none;
-  padding: 0;
-}
-
-.todo {
-  background-color: white;
-  border: 1px solid #ddd;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.todo.completed {
-  background-color: #FFF6C7; /* Y30 */
-  text-decoration: line-through;
-  color: #aaa;
-}
-
-.todo .btn-group button {
-  background-color: #F4AA29; /* M40Y90 */
-  color: white;
-}
-
-.todo .btn-group button:hover {
-  background-color: #B9D1EA; /* C30M10 */
-  color: #333;
-}
-/* src/App.css */
-.auth-container, .todoapp, .list-manager {
-  background-color: #FFF6C7; /* Y30 */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 20px;
-}
-
-.list-manager h2 {
-  color: #4D4D4D;
-}
-
-.list-manager input {
-  width: calc(100% - 20px);
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.list-manager button {
-  width: 100%;
-  padding: 10px;
-  background-color: #F4AA29; /* M40Y90 */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.list-manager ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.list-manager li {
-  margin: 5px 0;
-}
-
-.list-manager li button {
-  width: 100%;
-  padding: 10px;
-  background-color: #B9D1EA; /* C30M10 */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }

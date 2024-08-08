@@ -96,7 +96,7 @@ function Todo(props) {
         }
       }, [wasEditing, isEditing]);
     return (
-        <li className="todo stack-small">
+      <li className={`todo stack-small ${props.completed ? "completed" : ""}`}>
             {isEditing ? editingTemplate : viewTemplate}
       </li>
     );
